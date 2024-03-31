@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="bg-gray-200 py-4">
+
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <a class="text-xl font-bold" href="#">Notes App</a>
+                <ul class="flex space-x-4">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="hover:text-blue-500" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="hover:text-blue-500" href="/logout">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="hover:text-blue-500" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="hover:text-blue-500" href="/sign_up">Sign Up</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == "error" %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ message }}</span>
+                    <button class="absolute top-0 bottom-0 right-0 px-4 py-3 focus:outline-none" onclick="this.parentElement.style.display='none'">
+                        <svg class="fill-current h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 6.066 4.652a1 1 0 00-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 001.414 1.414L10 11.414l3.934 3.934a1 1 0 001.414-1.414L11.414 10l3.934-3.934a1 1 0 000-1.414z"/></svg>
+                    </button>
+                </div>
+            {% else %}
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ message }}</span>
+                    <button class="absolute top-0 bottom-0 right-0 px-4 py-3 focus:outline-none" onclick="this.parentElement.style.display='none'">
+                        <svg class="fill-current h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm4.293-10.293a1 1 0 00-1.414-1.414L10 10.586l-1.879-1.88a1 1 0 00-1.414 1.414l2.586 2.586a1 1 0 001.415 0l5-5a1 1 0 000-1.415z"/></svg>
+                    </button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script
+    type="text/javascript"
+    src="{{url_for('static', filename = 'index.js')}}"></script>
+</body>
+</html>
