@@ -1,0 +1,209 @@
+body {
+    background-color: #f9fafb;
+}
+.navbar {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.note-card {
+    transition: box-shadow 0.2s;
+}
+.note-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+/* Light mode styles */
+body {
+    background-color: rgb(232, 235, 239);
+    color: black;
+}
+
+.nav-item a {
+    color: rgb(201, 193, 193);
+}
+
+.note-card {
+    background-color: white;
+    color: black;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+body.dark-mode .nav-item a {
+    color: rgb(248, 241, 241);
+}
+
+body.dark-mode .note-card {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode #note{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+/* Base button styles */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Button styles for light mode */
+button#theme-toggle {
+    background-color: #1b3d61; /* Blue color */
+    color: white;
+}
+
+button#theme-toggle:hover{
+    background-color: #052344; /* Darker blue color on hover */
+    color: white;
+}
+
+
+
+/* Button styles for delete button in light mode */
+button.delete {
+    background-color: #dc3545; /* Red color */
+    color: white;
+}
+
+button.delete:hover {
+    background-color: #c82333; /* Darker red color on hover */
+    color: white;
+}
+
+/* Button styles for dark mode */
+body.dark-mode button.share {
+    background-color: #1a73e8; /* Darker blue for dark mode */
+    color: white;
+}
+
+body.dark-mode button.share:hover {
+    background-color: #185abc; /* Even darker blue on hover */
+    color: white;
+}
+
+
+/* Button styles for delete button in dark mode */
+body.dark-mode button.delete {
+    background-color: #e53935; /* Red color for dark mode */
+    color: white;
+}
+
+body.dark-mode button.delete:hover {
+    background-color: #d32f2f; /* Darker red color on hover */
+    color: white;
+}
+
+.note-card {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    min-width: 250px;
+    flex-grow: 1;
+    margin: 10px;
+}
+
+.note-card pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}    
+
+body.dark-mode .note-card pre {
+    color: white;
+}
+
+/* Contact.html  */
+  
+body.dark-mode .contact-us { 
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .contact-us .text-gray-700 { /* Invert text color to white */
+    color: rgb(255, 255, 255);
+}
+  
+body.dark-mode .contact-us .border-gray-300 { /* Invert border color to dark-gray */
+    border-color: #cccccc;
+    background-color: #3a3939;
+}
+
+body .contact-us .border-gray-300 { /* Invert border color to dark-gray */
+    border-color: #2c2929;
+    background-color: #e6e1e1;
+}
+  
+body.dark-mode .contact-us .contact_u:focus { /* Change focus border color */
+    border-color: #3b82f6;
+}
+  
+body.dark-mode .contact-us .bg-blue-500 { /* Change button background color */
+    background-color: #428bca;
+}
+  
+body.dark-mode .contact-us .hover:bg-blue-600 { /* Change button hover color */
+    background-color: #3879b0;
+}
+
+body.dark-mode #logoutModal .logoutmod .bg-white{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode #logoutModal .logoutmode .bg-white{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode #logoutModal .bg-white{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode #logoutModal .logouttitle .text-gray-900{
+    color: white;
+}
+
+body.dark-mode #logoutModal .logmod .text-gray-500{
+    color: white;
+}
+
+body.dark-mode .maintitle{
+    color: white;
+}
+
+body.dark-mode .login{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .login .text-gray-700, .text-gray-600 {
+    color: white;
+}
+
+body.dark-mode .login .login_in{
+    background-color: #393939;
+    color: white;
+}
+
+body.dark-mode .sign{
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .sign .text-gray-700, .text-gray-600 {
+    color: white;
+}
+
+body.dark-mode .sign .sign_in{
+    background-color: #393939;
+    color: white;
+}

@@ -1,22 +1,50 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1 class="text-center">Notes application</h1>
+<div id="container" class="text-center">
+    <h1 id="welcome-text" class="text-4xl font-semibold text-white-800 opacity-0 mb-6">Welcome to Notes Application</h1>
+        <button id="getStartedBtn" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Get Started</button>
 
-<ul class="list-none" id="notes">
-    {% for note in user.notes %}
-    <li class="border-b py-2 relative">{{ note.data }}
-        <button type="button" class="absolute top-0 right-0 mt-1 mr-2 text-gray-600 hover:text-gray-800" onClick="deleteNote('{{ note.id }}')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </li>
-    {% endfor %}
-</ul>
-<form method="POST">
-    <textarea name="note" id="note" class="w-full border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"></textarea>
-    <br />
-    <div class="text-center mt-4">
-        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">Add Note</button>
-    </div>
-</form>
+</div>
+<style>
+    #container {
+        height: 100vh;
+        background-image: url("{{ url_for('static', filename='Images/Bookie.jpg') }}");
+        background-repeat: no-repeat;
+        background-size: cover; /* Maintain aspect ratio, scale to cover */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; 
+    }
+
+
+    #welcome-text{
+        color: rgb(73, 36, 36);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 3s ease-in-out;
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const textElement = document.getElementById("welcome-text");
+        textElement.classList.remove("opacity-0");
+        textElement.classList.add("animate-fadeIn");
+    });
+    document.getElementById('getStartedBtn').addEventListener('click', function() {
+        window.location.href = "{{ url_for('views.my_notes') }}";
+    });
+</script>
 {% endblock %}
+
+

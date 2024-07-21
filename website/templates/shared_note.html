@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Shared Note{% endblock %}
+{% block content %}
+<div class="text-center mb-8">
+    <h1 class="text-4xl font-semibold text-gray-800">Shared Note</h1>
+</div>
+
+<div class="bg-white shadow-md rounded-lg p-6 note-card relative">
+    <p class="text-gray-700">{{ note.data }}</p>
+    <p class="text-gray-500 text-sm mt-4">Shared by: {{ user.firstName }}</p>
+</div>
+{% endblock %}

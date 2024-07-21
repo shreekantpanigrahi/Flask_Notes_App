@@ -1,9 +1,13 @@
+import os
 from flask import Flask 
 from flask_sqlalchemy import SQLAlchemy
 from os import path 
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
+from flask_wtf import CSRFProtect
+from flask_mail import Mail
 
-
+csrf = CSRFProtect()
+mail = Mail()
 db = SQLAlchemy()
 DB_NAME= "database.db"
 
@@ -13,8 +17,22 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI']= f'sqlite:///{DB_NAME}'
     db.init_app(app)
 
+    # Mail configuration
+    app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
 
-    from .views import views 
+    
+    csrf = CSRFProtect(app)
+    mail = Mail(app)
+
+    mail.init_app(app)
+    csrf.init_app(app)  
+
+    from .views import views
     from .auth import auth 
 
     app.register_blueprint(views, url_prefix='/')
@@ -30,6 +48,13 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+    
+    @app.context_processor
+    def inject_user():
+        return dict(user=current_user)
+    
+    
+
 
     return app
 

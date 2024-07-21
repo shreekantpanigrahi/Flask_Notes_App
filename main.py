@@ -18,3 +18,5 @@ def show_users():
     users = User.query.all()
     for user in users:
         print(f"ID: {user.id}, Email: {user.email}, First Name: {user.firstName}")
+
+
