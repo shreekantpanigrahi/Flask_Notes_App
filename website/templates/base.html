@@ -13,7 +13,13 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-to-r from-blue-500 to-blue-700 py-4 px-2">
         <div class="container mx-auto flex justify-between items-center">
             <a class="text-3xl font-bold text-gray-800" href="{{ url_for('views.home') }}">Notes App</a>
-            <ul class="flex space-x-4">
+            <button id="menu-toggle" class="block lg:hidden text-gray-800 focus:outline-none">
+                <!-- Hamburger Icon -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <ul id="menu" class="hidden lg:flex lg:space-x-4">
                 {% if session.get('shared_note') %}
                         <li class="nav-item">
                             <a class="hover:text-blue-500 text-gray-700" href="{{ url_for('views.home') }}">Home</a>
@@ -24,7 +30,7 @@
                         <li class="nav-item">
                             <a class="hover:text-blue-500 text-gray-700" href="{{ url_for('auth.sign_up') }}">Sign Up</a>
                         </li>
-                    {% elif user.is_authenticated %}
+                    {% elif current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="hover:text-blue-500 text-gray-700" href="{{ url_for('views.home') }}">Home</a>
                         </li>
@@ -82,7 +88,7 @@
         {% endwith %}
     </div>
 
-    <div class="container">
+    <div>
         {% block content %}{% endblock %}
     </div>
 

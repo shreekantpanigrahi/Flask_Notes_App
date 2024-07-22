@@ -1,6 +1,6 @@
 from flask_mail import Message, Mail
 from . import db 
-from flask import Blueprint, app, jsonify, render_template, request, flash, redirect, url_for 
+from flask import Blueprint, app, jsonify, render_template, request, flash, redirect, session, url_for 
 from .models import User 
 from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_login import login_user, login_required, logout_user, current_user
@@ -23,6 +23,8 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 flash("Logged in successfully!", category='success')
+                # Clear the 'shared_note' flag from the session
+                session.pop('shared_note', None)
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
             else:
@@ -63,6 +65,9 @@ def sign_up():
             new_user = User(email=email, firstName = firstName, password= generate_password_hash(password, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
+            # Clear the 'shared_note' flag from the session
+            session.pop('shared_note', None)
+            
             login_user(new_user, remember=True)
             flash("Account created successfully!", category='success')
             return redirect(url_for('views.home'))

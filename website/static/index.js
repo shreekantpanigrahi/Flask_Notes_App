@@ -114,6 +114,16 @@ function sendEmail() {
     });
 }
 
+document.getElementById('menu-toggle').addEventListener('click', function() {
+    const menu = document.getElementById('menu');
+    if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+    } else {
+        menu.classList.add('hidden');
+    }
+});
+
+
 // function sendResetEmail() {
 //     const email = document.getElementById('email').value;
 
