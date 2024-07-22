@@ -16,3 +16,6 @@ class User(db.Model, UserMixin):
     firstName= db.Column(db.String(150))
     notes= db.relationship('Note')
 
+    @property
+    def is_active(self):
+        return True

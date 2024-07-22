@@ -1,6 +1,7 @@
 {% extends "base.html" %}{% block title %}SignUp{% endblock %}
 {% block content %}
 <form method="POST">
+    {{ signup_form.hidden_tag() }}
     <div class="min-h-screen flex items-center justify-center">
         <div class="sign bg-white p-8 rounded shadow-md w-full sm:w-96">
             <h1 class="text-3xl font-semibold mb-6 text-center">Sign Up</h1>

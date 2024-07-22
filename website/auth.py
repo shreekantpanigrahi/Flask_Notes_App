@@ -50,24 +50,24 @@ def sign_up():
 
         user= User.query.filter_by(email=email).first()
         if user:
-            flash("Email already exist", category='error')
+            flash("Email already exist", category='danger')
         elif len(email)<4:
-            flash("Email should be greater than 3 characters", category='error')
+            flash("Email should be greater than 3 characters", category='danger')
         elif len(firstName)<2:
-            flash("FirstNmae should be greater than 1 characters", category='error')
+            flash("FirstNmae should be greater than 1 characters", category='danger')
         elif password != confirmPassword:
-            flash("Password should matchb the confirm password", category='error')
+            flash("Password should matchb the confirm password", category='danger')
         elif len(password)<5:
-            flash('Password should be greater than 4 characters', category='error')
+            flash('Password should be greater than 4 characters', category='danger')
         else:
             new_user = User(email=email, firstName = firstName, password= generate_password_hash(password, method='pbkdf2:sha256'))
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
+            login_user(new_user, remember=True)
             flash("Account created successfully!", category='success')
             return redirect(url_for('views.home'))
 
-    return render_template("sign_up.html", user = current_user)
+    return render_template("sign_up.html", user = current_user, signup_form=signup_form)
 
 
 
