@@ -2,6 +2,9 @@
 
 A simple Flask-based web application for creating and managing notes. It includes user authentication, note creation, deletion, and sharing features. The application also supports dark mode and is designed to be responsive.
 
+**##Deployment Link**
+App is live here: https://note-app-oth8.onrender.com
+
 ## Features
 
 - User authentication (login and sign-up)
