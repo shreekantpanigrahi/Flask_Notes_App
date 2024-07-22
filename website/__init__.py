@@ -2,9 +2,10 @@ import os
 from flask import Flask 
 from flask_sqlalchemy import SQLAlchemy
 from os import path 
-from flask_login import LoginManager,current_user
 from flask_wtf import CSRFProtect
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+
 
 csrf = CSRFProtect()
 mail = Mail()
@@ -14,7 +15,7 @@ DB_NAME= "database.db"
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY']= os.environ.get('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI']= f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI']= os.environ.get('DATABASE_URL')
     db.init_app(app)
 
     # Mail configuration
@@ -41,26 +42,11 @@ def create_app():
     from .models import User,Note
     create_database(app)
 
-    login_manager= LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
-    
-    @app.context_processor
-    def inject_user():
-        return dict(user=current_user)
-    
-    
-
-
     return app
 
 
 def create_database(app):
     with app.app_context():
-        if not path.exists('website/' + DB_NAME):
+        if not path.exists('website/instance' + DB_NAME):
             db.create_all()
             print('Create Database!')

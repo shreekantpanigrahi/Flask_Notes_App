@@ -24,7 +24,10 @@ body {
 .nav-item {
     display: block;
     margin-bottom: 10px;
+
 }
+
+
 
 @media (min-width: 768px) {
     .nav-item {
@@ -128,6 +131,10 @@ body.dark-mode {
 
 body.dark-mode .nav-item a {
     color: rgb(248, 241, 241);
+}
+
+body.dark-mode .nav-item:hover a {
+    color: #3b82f6; 
 }
 
 body.dark-mode .note-card {
@@ -292,4 +299,12 @@ body.dark-mode .sign .text-gray-700, .text-gray-600 {
 body.dark-mode .sign .sign_in{
     background-color: #393939;
     color: white;
+}
+
+body .login .login_in{
+    background-color: #eae8e8;
+}
+
+body .sign .sign_in{
+    background-color: #eae8e8;
 }
