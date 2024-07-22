@@ -2,6 +2,7 @@ from website import create_app
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from website.models import User
+import os
 
 app=create_app()
 if __name__=='__main__':
@@ -9,7 +10,7 @@ if __name__=='__main__':
 
 # In your main Flask application file (e.g., main.py)
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 
 # Import your models here
