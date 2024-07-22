@@ -1,36 +1,130 @@
-body {
-    background-color: #f9fafb;
+img {
+    max-width: 100%; /* Scale images down to fit container */
+    height: auto; /* Maintain aspect ratio */
 }
+
 .navbar {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
-.note-card {
-    transition: box-shadow 0.2s;
-}
+
 .note-card:hover {
-    transform: scale(1.02);
+    transform: scale(1.01);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 /* Light mode styles */
 body {
     background-color: rgb(232, 235, 239);
     color: black;
+    font-size: 14px; 
 }
 
 .nav-item a {
     color: rgb(201, 193, 193);
 }
+.nav-item {
+    display: block;
+    margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+    .nav-item {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+}
+
+button, .note-card {
+    touch-action: manipulation; 
+}
 
 .note-card {
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    width: 100%; 
+    max-width: 100%; 
+    min-width: 250px;
+    flex-grow: 1;
+    margin: 10px;
     background-color: white;
     color: black;
+    flex: 1 1 100%; /* Grow, shrink, and base width */
 }
+
+/* Styles for tablets and larger screens */
+@media (min-width: 768px) {
+    .note-card {
+        width: 45%; /* Adjust width for larger screens */
+        margin: 10px;
+    }
+}
+
+/* Styles for desktops and larger screens */
+@media (min-width: 1024px) {
+    .note-card {
+        width: 30%; /* Adjust width for even larger screens */
+    }
+}
+
+
+
+@media (min-width: 768px) {
+    body {
+        font-size: 14px; /* Larger font size for tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    body {
+        font-size: 16px; /* Larger font size for desktops */
+    }
+}
+
+
+@media (min-width: 768px) {
+    button {
+        padding: 12px 24px; /* Larger padding for tablets */
+    }
+}
+
+@media (min-width: 1024px) {
+    button {
+        padding: 14px 28px; /* Larger padding for desktops */
+    }
+}
+
+.modal {
+    width: 90%; /* Responsive width */
+    max-width: 500px; /* Max width for larger screens */
+}
+
+@media (min-width: 768px) {
+    .modal {
+        width: 70%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .modal {
+        width: 50%;
+    }
+}
+
 
 /* Dark mode styles */
 body.dark-mode {
     background-color: #121212;
     color: white;
 }
+
+@media (min-width: 768px) {
+    body.dark-mode .note-card {
+        background-color: #1e1e1e;
+        color: white;
+    }
+}
+
 
 body.dark-mode .nav-item a {
     color: rgb(248, 241, 241);
@@ -102,14 +196,6 @@ body.dark-mode button.delete:hover {
     color: white;
 }
 
-.note-card {
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    min-width: 250px;
-    flex-grow: 1;
-    margin: 10px;
-}
 
 .note-card pre {
     white-space: pre-wrap;
