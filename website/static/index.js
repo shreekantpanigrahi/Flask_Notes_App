@@ -123,26 +123,3 @@ document.getElementById('menu-toggle').addEventListener('click', function() {
     }
 });
 
-
-// function sendResetEmail() {
-//     const email = document.getElementById('email').value;
-
-//     fetch('/forgot-password', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ email }),
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.error) {
-//             alert(data.error);
-//         } else {
-//             alert('Password reset email sent!');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// }

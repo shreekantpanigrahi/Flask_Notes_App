@@ -4,7 +4,10 @@ from flask import Blueprint, app, jsonify, render_template, request, flash, redi
 from .models import User 
 from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_login import login_user, login_required, logout_user, current_user
-from .forms import LoginForm, SignupForm  # Import the forms
+from .forms import LoginForm, SignupForm, ResetPasswordRequestForm, ResetPasswordForm  # Import the forms
+from . import mail
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer 
+from flask import current_app
 
 mail = Mail()
 auth = Blueprint('auth', __name__)
@@ -67,7 +70,7 @@ def sign_up():
             db.session.commit()
             # Clear the 'shared_note' flag from the session
             session.pop('shared_note', None)
-            
+
             login_user(new_user, remember=True)
             flash("Account created successfully!", category='success')
             return redirect(url_for('views.home'))
@@ -82,68 +85,63 @@ def logout():
     logout_user()
     return redirect(url_for("auth.login"))
 
+@auth.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    form = ResetPasswordRequestForm()  # Create an instance of the form
+    if form.validate_on_submit():  # Check if the form is submitted and valid
+        email = form.email.data  # Retrieve the email from the form
+        user = User.query.filter_by(email=email).first()  # Query the user by email
+        if user:
+            send_reset_email(user)  # Send a reset email if user exists
+            flash('An email with instructions to reset your password has been sent.', 'info')
+            return redirect(url_for('auth.login'))  # Redirect to login page
+        else:
+            flash('No account found with that email.', 'warning')  # Notify if email not found
 
-# @auth.route('/forgot-password', methods=['POST'])
-# def forgot_password():
-#     data = request.get_json()
-#     email = data.get('email')
+    return render_template('reset_request.html', form=form)  # Render the request form
+
+
+def send_reset_email(user):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    token = s.dumps(user.email, salt='password-reset-salt')
+    msg = Message('Password Reset Request',
+                  sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('auth.reset_token', token=token, _external=True)}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
+@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    form_t = ResetPasswordForm()
+    # Correctly retrieve the secret key
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     
-#     user = User.query.filter_by(email=email).first()
-#     if not user:
-#         return jsonify({'error': 'The email address you specified does not have an account.'}), 400
+    try:
+        # Attempt to load the token with an increased expiration time
+        email = s.loads(token, salt='password-reset-salt', max_age=7200)  # Set to 2 hours
+    except SignatureExpired:
+        flash('The password reset link has expired.', 'danger')
+        return redirect(url_for('auth.reset_request'))
+    except BadSignature as e:
+        print(f"Bad signature error: {e}")  # Log the error
+        flash('The password reset link is invalid.', 'danger')
+        return redirect(url_for('auth.reset_request'))
 
-#     # Generate a token (use itsdangerous for token generation)
-#     from itsdangerous import URLSafeTimedSerializer
-#     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-#     token = serializer.dumps(email, salt='password-reset-salt')
+    # Find user by email
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        flash('Invalid email address!', 'danger')
+        return redirect(url_for('auth.reset_request'))
 
-#     # Send email
-#     reset_url = url_for('auth.reset_password', token=token, _external=True)
-#     msg = Message(
-#         'Password Reset Request',
-#         sender=app.config['MAIL_USERNAME'],
-#         recipients=[email]
-#     )
-#     msg.body = f'Please click the link to reset your password: {reset_url}'
-#     mail.send(msg)
+    if form_t.validate_on_submit():
+        user.password = generate_password_hash(form_t.password.data, method='pbkdf2:sha256')
+        db.session.commit()
+        flash('Your password has been updated!', 'success')
+        return redirect(url_for('auth.login'))
 
-#     return jsonify({'message': 'Password reset email sent!'}), 200
-
-# @auth.route('/reset-password/<token>', methods=['GET', 'POST'])
-# def reset_password(token):
-#     if request.method == 'POST':
-#         data = request.form
-#         new_password = data.get('new_password')
-#         confirm_password = data.get('confirm_password')
-
-#         if not new_password or not confirm_password:
-#             flash('Please fill out both fields', 'error')
-#             return render_template('setnewpassword.html', token=token)
-
-#         if new_password != confirm_password:
-#             flash('Passwords do not match', 'error')
-#             return render_template('setnewpassword.html', token=token)
-
-#         from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
-#         serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        
-#         try:
-#             email = serializer.loads(token, salt='password-reset-salt', max_age=3600)
-#         except (SignatureExpired, BadSignature):
-#             flash('The password reset link is invalid or has expired', 'error')
-#             return redirect(url_for('views.login'))
-
-#         user = User.query.filter_by(email=email).first()
-#         if user:
-#             user.set_password(new_password)
-#             db.session.commit()
-#             flash('Your password has been updated', 'success')
-#             return redirect(url_for('views.login'))
-#         else:
-#             flash('User does not exist', 'error')
-#             return redirect(url_for('views.login'))
-
-#     return render_template('setnewpassword.html', token=token)
-
-
-
+    return render_template('reset_token.html', form_t=form_t)

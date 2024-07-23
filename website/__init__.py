@@ -5,7 +5,7 @@ from os import path
 from flask_wtf import CSRFProtect
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-
+from .config import Config
 
 csrf = CSRFProtect()
 mail = Mail()
@@ -14,12 +14,13 @@ DB_NAME= "database.db"
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(Config) 
     app.config['SECRET_KEY']= os.environ.get('SECRET_KEY')
     database_url = os.environ.get('DATABASE_URL', f"sqlite:///{DB_NAME}")
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     db.init_app(app)
 
-    # Mail configuration
+    # Mail configuration for conatct.html
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Reset Password{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+    <div class="reset_req bg-white p-8 rounded shadow-md w-full sm:w-96">
+        <h1 class="text-3xl font-semibold mb-6 text-center">Reset Password</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+                {{ form.email(class="reset w-full border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500") }}
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Request Password Reset</button>
+        </form>
+        <p class="mt-4 text-center text-gray-600">
+            <a href="{{ url_for('auth.login') }}" class="text-blue-500 hover:underline">Back to Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
