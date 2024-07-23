@@ -333,3 +333,17 @@ body.dark-mode .reset_tok .text-gray-700{
     background-color: #1e1e1e;
     color: white;
 }
+
+body.dark-mode .shared {
+    background-color: #1e1e1e;
+    color: white;
+}
+
+body.dark-mode .shared .text-gray-700, .text-gray-500 {
+    color: white;
+}
+
+body.dark-mode .shared_note .text-gray-800{
+    color: white;
+}
+

@@ -79,6 +79,8 @@ def share_note_view(note_id):
     if note:
         user = User.query.get(note.user_id)
         session['shared_note'] = True
+        db.session.commit()
+        session['shared_note_id'] = note.id
         return render_template("shared_note.html", note=note, user=user)
     else:
         flash("Note not found!", category='error')
