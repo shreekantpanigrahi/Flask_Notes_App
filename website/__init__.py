@@ -52,3 +52,4 @@ def create_database(app):
         if not path.exists('website/instance' + DB_NAME):
             db.create_all()
             print('Create Database!')
+

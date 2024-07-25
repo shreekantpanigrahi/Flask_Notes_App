@@ -1,7 +1,7 @@
 from flask_mail import Message, Mail
 from . import db 
 from flask import Blueprint, app, jsonify, render_template, request, flash, redirect, session, url_for 
-from .models import User 
+from .models import User, Note
 from werkzeug.security import generate_password_hash, check_password_hash 
 from flask_login import login_user, login_required, logout_user, current_user
 from .forms import LoginForm, SignupForm, ResetPasswordRequestForm, ResetPasswordForm  # Import the forms
@@ -145,3 +145,26 @@ def reset_token(token):
         return redirect(url_for('auth.login'))
 
     return render_template('reset_token.html', form_t=form_t)
+
+
+@auth.route('/update-note/<int:note_id>', methods=['POST'])
+def update_note(note_id):
+    data = request.json.get('data')
+    
+    if data is None:
+        return jsonify({'status': 'error', 'message': 'No data provided'}), 400
+
+    try:
+        # Fetch the note from the database
+        note = Note.query.get(note_id)
+        if note:
+            # Update the note content
+            note.data = data
+            # Commit the changes to the database
+            db.session.commit()
+            return jsonify({'status': 'success', 'message': 'Note updated successfully'}), 200
+        else:
+            return jsonify({'status': 'error', 'message': 'Note not found'}), 404
+    except Exception as e:
+        db.session.rollback()  # Rollback in case of error
+        return jsonify({'status': 'error', 'message': str(e)}), 500

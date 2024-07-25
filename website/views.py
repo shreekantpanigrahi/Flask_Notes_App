@@ -118,3 +118,9 @@ def send_email():
     
     return 'Email sent!'
 
+@views.route('/note/<int:note_id>')
+@login_required
+def note_detail(note_id):
+    # Fetch the note by ID
+    note = Note.query.filter_by(id=note_id, user_id=current_user.id).first_or_404()
+    return render_template('note_detail.html', note=note)

@@ -114,12 +114,140 @@ function sendEmail() {
     });
 }
 
-document.getElementById('menu-toggle').addEventListener('click', function() {
-    const menu = document.getElementById('menu');
-    if (menu.classList.contains('hidden')) {
-        menu.classList.remove('hidden');
-    } else {
-        menu.classList.add('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+    const notes = document.querySelectorAll('.note-content');
+
+    notes.forEach(note => {
+        const linesToShow = 5;
+        const lineHeight = parseInt(getComputedStyle(note).lineHeight);
+        const maxHeight = linesToShow * lineHeight;
+
+        if (note.scrollHeight > maxHeight) {
+            note.style.maxHeight = `${maxHeight}px`;
+            note.style.overflow = 'hidden';
+
+            const readMore = document.createElement('span');
+            readMore.innerText = '...Read More';
+            readMore.style.color = 'blue';
+            readMore.style.cursor = 'pointer';
+            note.parentNode.appendChild(readMore);
+
+            // Add a click event listener to redirect to the full note page
+            readMore.addEventListener('click', () => {
+                const noteId = note.getAttribute('data-note-id');
+                window.location.href = `/note/${noteId}`;
+            });
+        }
+    });
+});
+
+
+function toggleMenu(button) {
+    const dropdown = button.nextElementSibling;
+    dropdown.classList.toggle('hidden');
+}
+
+// Optional: Close the menu if clicked outside
+document.addEventListener('click', function (event) {
+    const isClickInside = event.target.closest('.menu-container');
+
+    if (!isClickInside) {
+        const dropdowns = document.querySelectorAll('.menu-dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.classList.add('hidden');
+        });
     }
 });
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure each note has its original text stored when the page loads
+    document.querySelectorAll('.note-content, #note-content').forEach(noteElement => {
+        noteElement.setAttribute('data-original-text', noteElement.textContent);
+        noteElement.setAttribute('data-edited-text', noteElement.textContent); // Track edited state
+    });
+});
+
+function makeEditable(noteElement, editButtons) {
+    noteElement.contentEditable = 'true';
+    noteElement.style.border = '1px solid #ccc';
+    noteElement.focus();
+    editButtons.classList.remove('hidden');
+}
+
+function makeNonEditable(noteElement, editButtons) {
+    noteElement.contentEditable = 'false';
+    noteElement.style.border = 'none';
+    editButtons.classList.add('hidden');
+}
+
+function editNote(noteId) {
+    const noteElement = getNoteElement(noteId);
+    const editButtons = getEditButtons(noteElement);
+
+    if (noteElement.isContentEditable) {
+        // Save changes before making the note non-editable
+        saveNoteChanges(noteId);
+        makeNonEditable(noteElement, editButtons);
+    } else {
+        // Update the edited text before making the note editable
+        noteElement.setAttribute('data-edited-text', noteElement.textContent);
+        makeEditable(noteElement, editButtons);
+    }
+}
+
+function saveNoteChanges(noteId) {
+    const noteElement = getNoteElement(noteId);
+    const updatedText = noteElement.textContent;
+
+    // Fetch CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Send AJAX request to save changes
+    fetch(`/update-note/${noteId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ data: updatedText }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Note updated successfully:', data);
+        // Update the original and edited text after saving
+        noteElement.setAttribute('data-original-text', updatedText);
+        noteElement.setAttribute('data-edited-text', updatedText);
+        makeNonEditable(noteElement, getEditButtons(noteElement));
+    })
+    .catch(error => {
+        console.error('Error updating note:', error);
+    });
+}
+
+function discardChanges(noteId) {
+    const noteElement = getNoteElement(noteId);
+    // Revert to the last saved state
+    const originalText = noteElement.getAttribute('data-original-text');
+    noteElement.textContent = originalText;
+    noteElement.setAttribute('data-edited-text', originalText); // Update edited text
+    makeNonEditable(noteElement, getEditButtons(noteElement));
+}
+
+function getNoteElement(noteId) {
+    // Get the note element based on whether we're on a detail page or a list page
+    const noteElement = document.querySelector(`.note-content[data-note-id="${noteId}"], #note-content[data-note-id="${noteId}"]`);
+    return noteElement;
+}
+
+function getEditButtons(noteElement) {
+    // Assuming edit buttons are siblings of the note element or inside a container
+    let editButtons;
+    if (noteElement.id === 'note-content') {
+        editButtons = document.getElementById('edit-buttons');
+    } else {
+        const noteCard = noteElement.closest('.note-card');
+        editButtons = noteCard.querySelector('.edit-buttons');
+    }
+    return editButtons;
+}
