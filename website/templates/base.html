@@ -14,7 +14,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-to-r from-blue-500 to-blue-700 py-4 px-2">
         <div class="container mx-auto flex justify-between items-center">
             <a class="text-3xl font-bold text-gray-800" href="{{ url_for('views.home') }}">Note$ App</a>
-            <button id="menu-toggle" class="block lg:hidden text-gray-800 focus:outline-none">
+            <button id="menu-toggle" class="block lg:hidden text-gray-800 focus:outline-none" onclick="toggleMenu(this)">
                 <!-- Hamburger Icon -->
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
