@@ -2,6 +2,8 @@ from website import create_app
 from website.models import User
 from flask_login import LoginManager,current_user
 
+# Run the project with python main.py
+
 app=create_app()
 login_manager= LoginManager()
 login_manager.login_view = 'auth.login'
